@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import Papa from 'papaparse'; // We use PapaParse for CSV parsing
+import Papa from 'papaparse';
 
 const DataInputForm = ({ onDataSubmit }) => {
   const [csvData, setCsvData] = useState(null);
@@ -13,28 +13,28 @@ const DataInputForm = ({ onDataSubmit }) => {
       return;
     }
 
-    // Read and parse the CSV file using PapaParse
+    // Read and parse the CSV file
     Papa.parse(file, {
       complete: (result) => {
         if (result.errors.length > 0) {
           setError("Error parsing the CSV file.");
         } else {
-          setError(null); // Clear any previous errors
-          setCsvData(result.data); // Store parsed data in state
+          setError(null);
+          setCsvData(result.data);
         }
       },
-      header: true, // Treat the first row as headers
-      skipEmptyLines: true, // Skip empty lines in the CSV
+      header: true,
+      skipEmptyLines: true,
     });
   };
 
   // Handle form submission and pass parsed data to parent
   const handleSubmit = () => {
     if (csvData) {
-      // Convert the parsed data into the format you want
+      // Convert the parsed data
       const formattedData = csvData.map(row => ({
         date: row.DATE,
-        temp: parseFloat(row.TEMP.trim()), // Remove extra spaces and convert to number
+        temp: parseFloat(row.TEMP.trim()),
         station: row.STATION,
         latitude: row.LATITUDE,
         longitude: row.LONGITUDE,
@@ -42,7 +42,7 @@ const DataInputForm = ({ onDataSubmit }) => {
         name: row.NAME,
       }));
 
-      // Pass the data to the parent component (Home.js) for processing
+      // Pass the data to the parent component
       onDataSubmit(formattedData);
     } else {
       setError("No data to submit.");
